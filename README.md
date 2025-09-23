@@ -1,4 +1,4 @@
-# Productivity Hub - Frontend 📝✅⏳🧠
+# Productivity Hub - Frontend 📝
 
 This is the **React-based frontend** for the Productivity Hub app, a web platform combining note-taking, task tracking, Pomodoro timer, and learning tools (flashcards & quizzes).
 
