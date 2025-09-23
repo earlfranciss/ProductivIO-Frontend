@@ -1,61 +1,12 @@
-# Productivity Hub - Frontend 📝✅⏳🧠
+# React + Vite
 
-This is the **React-based frontend** for the Productivity Hub app, a web platform combining note-taking, task tracking, Pomodoro timer, and learning tools (flashcards & quizzes).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## ✨ Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-### 📝 Notes
-- Rich text editor (headings, lists, code blocks)
-- Attach images/files to notes
-- Export/Import notes (Markdown / JSON)
+## Expanding the ESLint configuration
 
-### ✅ Task & Habit Tracking
-- Create, edit, and delete tasks with priorities
-- Kanban board (drag & drop)
-- Habit streaks and progress tracker
-
-### ⏳ Pomodoro Timer
-- Customizable work/break cycles
-- Sound notifications
-- Focus mode (distraction-free view)
-
-### 🧠 Flashcards & Quizzes
-- Create flashcard decks with question/answer pairs
-- Study mode with "Got it" or "Review"
-- Quiz builder (MCQ, True/False, short answer)
-
-### ⚙️ Customization
-- Dark/light/system theme
-- Keyboard shortcuts
-- Responsive and mobile-friendly
-
----
-
-## 🛠 Tech Stack
-- React 18
-- Tailwind CSS
-- React Router
-- LocalStorage / IndexedDB (for offline mode)
-- Axios (API requests to backend)
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
-```bash
-# Clone the frontend repo
-git clone https://github.com/your-username/productivity-hub-frontend.git
-cd productivity-hub-frontend
-
-# Install dependencies
-npm install
-
-### Running the App
-npm run dev
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
