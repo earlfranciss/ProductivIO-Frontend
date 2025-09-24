@@ -57,5 +57,5 @@ cd productivity-hub-frontend
 # Install dependencies
 npm install
 
-### Running the App
+# Running the App
 npm run dev
