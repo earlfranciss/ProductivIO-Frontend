@@ -51,8 +51,8 @@ This is the **React-based frontend** for the Productivity Hub app, a web platfor
 ### Installation
 ```bash
 # Clone the frontend repo
-git clone https://github.com/your-username/productivity-hub-frontend.git
-cd productivity-hub-frontend
+git clone https://github.com/earlfranciss/ProductivIO-Frontend.git
+cd ProductivIO-Frontend
 
 # Install dependencies
 npm install
