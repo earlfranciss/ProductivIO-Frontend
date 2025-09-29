@@ -1,161 +1,139 @@
-import { Avatar } from '@/components/avatar'
-import {
-    Dropdown,
-    DropdownButton,
-    DropdownDivider,
-    DropdownItem,
-    DropdownLabel,
-    DropdownMenu,
-} from '@/components/dropdown'
-import {
-    Sidebar,
-    SidebarBody,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarItem,
-    SidebarLabel,
-    SidebarSection,
-    SidebarSpacer,
-} from '@/components/sidebar'
-import {
-    ArrowRightStartOnRectangleIcon,
-    ChevronDownIcon,
-    ChevronUpIcon,
-    Cog8ToothIcon,
-    LightBulbIcon,
-    PlusIcon,
-    ShieldCheckIcon,
-    UserIcon,
-} from '@heroicons/react/16/solid'
-import {
-    Cog6ToothIcon,
-    HomeIcon,
-    InboxIcon,
-    MagnifyingGlassIcon,
-    MegaphoneIcon,
-    QuestionMarkCircleIcon,
-    SparklesIcon,
-    Square2StackIcon,
-    TicketIcon,
-} from '@heroicons/react/20/solid'
+import React, { useState } from 'react';
+import { 
+  LayoutDashboard, 
+  FileEdit, 
+  MoreHorizontal,
+  Settings,
+  HelpCircle,
+  LogOut,
+  CreditCard,
+  Bell,
+  User,
+  CircleCheckBig,
+  SquareChartGantt,
+  Brain,
+  Timer
+} from 'lucide-react';
 
 export default function Sidebar() {
-    return (
-        <Sidebar>
-            <SidebarHeader>
-                <Dropdown>
-                    <DropdownButton as={SidebarItem} className="mb-2.5">
-                        <Avatar src="/tailwind-logo.svg" />
-                        <SidebarLabel>Tailwind Labs</SidebarLabel>
-                        <ChevronDownIcon />
-                    </DropdownButton>
-                    <DropdownMenu className="min-w-64" anchor="bottom start">
-                        <DropdownItem href="/teams/1/settings">
-                            <Cog8ToothIcon />
-                            <DropdownLabel>Settings</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/teams/1">
-                            <Avatar slot="icon" src="/tailwind-logo.svg" />
-                            <DropdownLabel>Tailwind Labs</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/teams/2">
-                            <Avatar slot="icon" initials="WC" className="bg-purple-500 text-white" />
-                            <DropdownLabel>Workcation</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/teams/create">
-                            <PlusIcon />
-                            <DropdownLabel>New team&hellip;</DropdownLabel>
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-                <SidebarSection>
-                    <SidebarItem href="/search">
-                        <MagnifyingGlassIcon />
-                        <SidebarLabel>Search</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/inbox">
-                        <InboxIcon />
-                        <SidebarLabel>Inbox</SidebarLabel>
-                    </SidebarItem>
-                </SidebarSection>
-            </SidebarHeader>
-            <SidebarBody>
-                <SidebarSection>
-                    <SidebarItem href="/home">
-                        <HomeIcon />
-                        <SidebarLabel>Home</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/events">
-                        <Square2StackIcon />
-                        <SidebarLabel>Events</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/orders">
-                        <TicketIcon />
-                        <SidebarLabel>Orders</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/broadcasts">
-                        <MegaphoneIcon />
-                        <SidebarLabel>Broadcasts</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/settings">
-                        <Cog6ToothIcon />
-                        <SidebarLabel>Settings</SidebarLabel>
-                    </SidebarItem>
-                </SidebarSection>
-                <SidebarSpacer />
-                <SidebarSection>
-                    <SidebarItem href="/support">
-                        <QuestionMarkCircleIcon />
-                        <SidebarLabel>Support</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/changelog">
-                        <SparklesIcon />
-                        <SidebarLabel>Changelog</SidebarLabel>
-                    </SidebarItem>
-                </SidebarSection>
-            </SidebarBody>
-            <SidebarFooter>
-                <Dropdown>
-                    <DropdownButton as={SidebarItem}>
-                        <span className="flex min-w-0 items-center gap-3">
-                            <Avatar src="/profile-photo.jpg" className="size-10" square alt="" />
-                            <span className="min-w-0">
-                                <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">Erica</span>
-                                <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                                    erica@example.com
-                                </span>
-                            </span>
-                        </span>
-                        <ChevronUpIcon /> 
-                    </DropdownButton>
-                    <DropdownMenu className="min-w-64" anchor="top start">
-                        <DropdownItem href="/my-profile">
-                            <UserIcon />
-                            <DropdownLabel>My profile</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/settings">
-                            <Cog8ToothIcon />
-                            <DropdownLabel>Settings</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/privacy-policy">
-                            <ShieldCheckIcon />
-                            <DropdownLabel>Privacy policy</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/share-feedback">
-                            <LightBulbIcon />
-                            <DropdownLabel>Share feedback</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/logout">
-                            <ArrowRightStartOnRectangleIcon />
-                            <DropdownLabel>Sign out</DropdownLabel>
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </SidebarFooter>
-        </Sidebar>
-    )
+  const [activeItem, setActiveItem] = useState('Dashboard');
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const mainNavItems = [
+    { icon: LayoutDashboard, label: 'Dashboard' },
+    { icon: CircleCheckBig, label: 'Tasks' },
+    { icon: FileEdit, label: 'Notes' },
+    { icon: SquareChartGantt, label: 'Flashcards' },
+    { icon: Brain, label: 'Quiz' },
+    { icon: Timer, label: 'Pomodoro' }
+  ];
+
+  const bottomItems = [
+    { icon: Settings, label: 'Settings' },
+    { icon: HelpCircle, label: 'Get Help' },
+ 
+  ];
+
+  const profileMenuItems = [
+    { icon: User, label: 'Account' },
+    // { icon: CreditCard, label: 'Billing' },
+    { icon: Bell, label: 'Notifications' },
+    { icon: LogOut, label: 'Log out' }
+  ];
+
+  return (
+    <div className="h-screen w-64 bg-zinc-900 text-gray-300 flex flex-col">
+      {/* Header */}
+      <div className="p-6 flex items-center justify-between border-b border-zinc-800">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white"></div>
+          <span className="text-white font-semibold">ProductivIO</span>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <nav className="flex-1 px-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-200">
+
+        <div className="space-y-1">
+          {mainNavItems.map((item) => (
+            <button
+              key={item.label}
+              onClick={() => setActiveItem(item.label)}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                activeItem === item.label
+                  ? 'bg-zinc-800 text-white'
+                  : 'text-gray-400 hover:bg-zinc-800 hover:text-gray-300'
+              }`}
+            >
+              <item.icon className="w-4 h-4" />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Bottom Navigation */}
+      <div className="border-t border-zinc-800 px-3 py-3 space-y-1">
+        {bottomItems.map((item) => (
+          <button
+            key={item.label}
+            onClick={() => setActiveItem(item.label)}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+              activeItem === item.label
+                ? 'bg-zinc-800 text-white'
+                : 'text-gray-400 hover:bg-zinc-800 hover:text-gray-300'
+            }`}
+          >
+            <item.icon className="w-4 h-4" />
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* User Profile */}
+      <div className="border-t border-zinc-800 p-3 relative">
+        <button
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+          className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-zinc-800 transition-colors"
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white text-sm font-semibold">
+            EF
+          </div>
+          <div className="flex-1 text-left">
+            <div className="text-sm font-medium text-white">Earl Francis</div>
+            <div className="text-xs text-gray-500">eyong@n-pax.com</div>
+          </div>
+          <MoreHorizontal className="w-4 h-4 text-gray-400" />
+        </button>
+
+        {/* Profile Dropdown */}
+        {isProfileOpen && (
+          <div className="absolute bottom-full left-3 right-3 mb-2 bg-zinc-800 rounded-lg border border-zinc-700 shadow-xl overflow-hidden">
+            <div className="p-3 border-b border-zinc-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white font-semibold">
+                  EF
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-white">Earl Francis</div>
+                  <div className="text-xs text-gray-400">eyong@n-pax.com</div>
+                </div>
+              </div>
+            </div>
+            <div className="py-1">
+              {profileMenuItems.map((item, index) => (
+                <button
+                  key={item.label}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-zinc-750 transition-colors"
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
