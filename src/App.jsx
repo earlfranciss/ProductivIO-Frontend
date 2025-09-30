@@ -17,6 +17,24 @@ import Dashboard from './pages/Dashboard'
 
 
 function App() {
+
+  const dummyNotes = [
+    { id: 1, title: "Meeting Notes", content: "Discuss project timeline" },
+    { id: 2, title: "Ideas", content: "Build AI-powered study tool" }
+  ];
+
+  const dummyTasks = [
+    { id: 1, title: "Finish React layout", completed: false },
+    { id: 2, title: "Write documentation", completed: true }
+  ];
+
+  // Dummy setter (just logs to console for now)
+  const dummySetCurrentView = (view) => {
+    console.log("Switching view to:", view);
+  };
+
+
+
   return (
     <Router>
       <Routes>
@@ -28,12 +46,22 @@ function App() {
           <Route path="/two-factor" element={<TwoFactorAuth />} />
         </Route>
         {/* <Route element={<PrivateRoute />}> */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/flashcards" element={<Flashcards />} />
-          <Route path="/pomodoro" element={<Pomodoro />} />
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route
+          path="/dashboard"
+          element={
+            <Dashboard
+              notes={dummyNotes}
+              tasks={dummyTasks}
+              setCurrentView={dummySetCurrentView}
+            />
+          }
+        />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/flashcards" element={<Flashcards />} />
+        <Route path="/pomodoro" element={<Pomodoro />} />
         {/* </Route> */}
         <Route path="*" element={<NotFound />} />
       </Routes>

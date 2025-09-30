@@ -1,11 +1,61 @@
+import { useState, useEffect } from "react";
+import MainLayout from "../components/MainLayout";
+import { 
+  FileText, 
+  CheckSquare, 
+  Target, 
+  Clock, 
+  Plus, 
+  Search,
+  X,
+  Edit2,
+  Trash2,
+  Save,
+  Coffee,
+  Timer,
+  TrendingUp,
+  Settings as SettingsIcon,
+  AlertCircle
+} from 'lucide-react';
+// import UseTask from '../hooks/UseTask'
+import TaskCard from '../components/ui/Tasks/TaskCard'
+import TaskModal from '../components/ui/Tasks/TaskModal'
+import TaskFilter from '../components/ui/Tasks/TaskFilter'
+
 export default function Tasks() {
+  const [tasks, setTasks] = useState([]);
+  const [showTaskModal, setShowTaskModal] = useState(false);
   const todoTasks = tasks.filter(t => t.status === 'todo');
     const inProgressTasks = tasks.filter(t => t.status === 'inprogress');
     const doneTasks = tasks.filter(t => t.status === 'done');
+  const [newTask, setNewTask] = useState({
+    title: '',
+    description: '',
+    priority: 'medium',
+    status: 'todo'
+  });
 
+  
+  const handleCreateTask = () => {
+    if (newTask.title.trim()) {
+      setTasks([...tasks, { ...newTask, id: Date.now(), createdAt: new Date().toLocaleDateString() }]);
+      setNewTask({ title: '', description: '', priority: 'medium', status: 'todo' });
+      setShowTaskModal(false);
+      setNotification('Task created successfully');
+      setTimeout(() => setNotification(''), 3000);
+    }
+  };
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(t => t.id !== id));
+  };
+
+  const updateTaskStatus = (id, newStatus) => {
+    setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
+  };
     return (
-      <div className="min-h-screen bg-slate-900 text-white p-8">
-        {/* <div className="max-w-7xl mx-auto">
+      <MainLayout>
+      <div className="min-h-screen text-white p-8">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-4xl font-bold mb-2">Task Management</h1>
@@ -100,7 +150,92 @@ export default function Tasks() {
               </div>
             </div>
           )}
-        </div> */}
+        </div>
       </div>
+
+
+
+      {showTaskModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 rounded-xl p-6 max-w-lg w-full border border-slate-700">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Create New Task</h2>
+              <button onClick={() => setShowTaskModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Task Title</label>
+                <input
+                  type="text"
+                  value={newTask.title}
+                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                  placeholder="Enter task title..."
+                  className="w-full bg-slate-900 border border-emerald-500 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Description (Optional)</label>
+                <textarea
+                  value={newTask.description}
+                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                  placeholder="Add task description..."
+                  rows="3"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Priority</label>
+                  <select
+                    value={newTask.priority}
+                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Status</label>
+                  <select
+                    value={newTask.status}
+                    onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="todo">To Do</option>
+                    <option value="inprogress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 justify-end mt-6">
+              <button 
+                onClick={() => setShowTaskModal(false)}
+                className="px-6 py-3 rounded-lg font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2"
+              >
+                <X className="w-5 h-5" />
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateTask}
+                className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+              >
+                <Save className="w-5 h-5" />
+                Save Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </MainLayout>
     );
 }

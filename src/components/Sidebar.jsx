@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  FileEdit, 
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  FileEdit,
   MoreHorizontal,
   Settings,
   HelpCircle,
   LogOut,
-  CreditCard,
   Bell,
   User,
   CircleCheckBig,
@@ -14,32 +14,34 @@ import {
   Brain,
   Timer
 } from 'lucide-react';
+import { useAuth } from "../context/authContext";
+import LogoutModal from "./LogoutModal";
 
 export default function Sidebar() {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const mainNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard' },
-    { icon: CircleCheckBig, label: 'Tasks' },
-    { icon: FileEdit, label: 'Notes' },
-    { icon: SquareChartGantt, label: 'Flashcards' },
-    { icon: Brain, label: 'Quiz' },
-    { icon: Timer, label: 'Pomodoro' }
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+    { icon: CircleCheckBig, label: 'Tasks', path: '/tasks' },
+    { icon: FileEdit, label: 'Notes', path: '/notes' },
+    { icon: SquareChartGantt, label: 'Flashcards', path: '/flashcards' },
+    { icon: Brain, label: 'Quiz', path: '/quiz' },
+    { icon: Timer, label: 'Pomodoro', path: '/pomodoro' }
   ];
 
   const bottomItems = [
-    { icon: Settings, label: 'Settings' },
-    { icon: HelpCircle, label: 'Get Help' },
- 
+    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: HelpCircle, label: 'Get Help', path: '/help' },
   ];
 
-  const profileMenuItems = [
-    { icon: User, label: 'Account' },
-    // { icon: CreditCard, label: 'Billing' },
-    { icon: Bell, label: 'Notifications' },
-    { icon: LogOut, label: 'Log out' }
-  ];
+  const handleConfirmLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="h-screen w-64 bg-zinc-900 text-gray-300 flex flex-col">
@@ -53,21 +55,22 @@ export default function Sidebar() {
 
       {/* Main Navigation */}
       <nav className="flex-1 px-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-200">
-
         <div className="space-y-1">
           {mainNavItems.map((item) => (
-            <button
+            <NavLink
               key={item.label}
-              onClick={() => setActiveItem(item.label)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                activeItem === item.label
-                  ? 'bg-zinc-800 text-white'
-                  : 'text-gray-400 hover:bg-zinc-800 hover:text-gray-300'
-              }`}
+              to={item.path}
+              className={({ isActive }) =>
+                `w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  isActive
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-gray-400 hover:bg-zinc-800 hover:text-gray-300'
+                }`
+              }
             >
               <item.icon className="w-4 h-4" />
               <span>{item.label}</span>
-            </button>
+            </NavLink>
           ))}
         </div>
       </nav>
@@ -121,19 +124,39 @@ export default function Sidebar() {
               </div>
             </div>
             <div className="py-1">
-              {profileMenuItems.map((item, index) => (
-                <button
-                  key={item.label}
-                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-zinc-750 transition-colors"
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </button>
-              ))}
+              <button
+                onClick={() => navigate("/account")}
+                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-zinc-750 transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span>Account</span>
+              </button>
+              <button
+                onClick={() => navigate("/notification")}
+                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-zinc-750 transition-colors"
+              >
+                <Bell className="w-4 h-4" />
+                <span>Notifications</span>
+              </button>
+              <button
+                onClick={() => setIsLogoutOpen(true)}
+                className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-zinc-750 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Log out</span>
+              </button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Logout Modal */}
+      {isLogoutOpen && (
+        <LogoutModal
+          onLogout={handleConfirmLogout}
+          onCancel={() => setIsLogoutOpen(false)}
+        />
+      )}
     </div>
   );
 }

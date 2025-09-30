@@ -1,7 +1,7 @@
-import Header from "../../components/Header";
-import Features from "../../components/Features";
-import Highlights from "../../components/Highlights";
-import Newsletter from "../../components/Newsletter";
+import Header from "../../components/ui/LandingPage/Header";
+import Features from "../../components/ui/LandingPage/Features";
+import Highlights from "../../components/ui/LandingPage/Highlights";
+import Newsletter from "../../components/ui/LandingPage/Newsletter";
 
 export default function LandingPage() {
   return (

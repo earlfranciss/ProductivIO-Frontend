@@ -5,7 +5,7 @@ import { FileText, CheckSquare, Target, Clock, Plus, Timer } from 'lucide-react'
 export default function Dashboard({ notes, tasks, setCurrentView }) {
   return (
     <MainLayout>
-      <div className="min-h-screen bg-slate-900 text-white p-8">
+      <div className="min-h-screen  text-white p-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Welcome back, Earl Francis Ong!</h1>
