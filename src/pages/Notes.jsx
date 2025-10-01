@@ -15,7 +15,8 @@ import {
   Timer,
   TrendingUp,
   Settings as SettingsIcon,
-  AlertCircle
+  AlertCircle,
+  FileEdit
 } from 'lucide-react';
 
 
@@ -53,7 +54,7 @@ const [notes, setNotes] = useState([]);
 
         {notes.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
-            <FileText className="w-24 h-24 text-slate-700 mb-6" />
+            <FileEdit className="w-24 h-24 text-slate-700 mb-6" />
             <h3 className="text-2xl font-bold mb-2">No notes yet</h3>
             <p className="text-slate-400 mb-6">Create your first note to get started</p>
             <button 

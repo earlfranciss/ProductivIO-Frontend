@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import MainLayout from "../components/MainLayout";
-import { 
-  FileText, 
-  CheckSquare, 
-  Target, 
-  Clock, 
-  Plus, 
+import {
+  FileText,
+  CheckSquare,
+  Target,
+  Clock,
+  Plus,
   Search,
   X,
   Edit2,
@@ -26,8 +26,8 @@ export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const todoTasks = tasks.filter(t => t.status === 'todo');
-    const inProgressTasks = tasks.filter(t => t.status === 'inprogress');
-    const doneTasks = tasks.filter(t => t.status === 'done');
+  const inProgressTasks = tasks.filter(t => t.status === 'inprogress');
+  const doneTasks = tasks.filter(t => t.status === 'done');
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -35,7 +35,7 @@ export default function Tasks() {
     status: 'todo'
   });
 
-  
+
   const handleCreateTask = () => {
     if (newTask.title.trim()) {
       setTasks([...tasks, { ...newTask, id: Date.now(), createdAt: new Date().toLocaleDateString() }]);
@@ -52,8 +52,10 @@ export default function Tasks() {
   const updateTaskStatus = (id, newStatus) => {
     setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
   };
-    return (
-      <MainLayout>
+
+
+  return (
+    <MainLayout>
       <div className="min-h-screen text-white p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -61,7 +63,7 @@ export default function Tasks() {
               <h1 className="text-4xl font-bold mb-2">Task Management</h1>
               <p className="text-slate-400">Organize and track your tasks with priorities and status</p>
             </div>
-            <button 
+            <button
               onClick={() => setShowTaskModal(true)}
               className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
             >
@@ -71,36 +73,42 @@ export default function Tasks() {
           </div>
 
           <div className="mb-6">
-            <div className="relative mb-4">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-              <input
-                type="text"
-                placeholder="Search tasks..."
-                className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <select className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Status */}
+              <select className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 col-span-1">
                 <option>All Status</option>
                 <option>To Do</option>
                 <option>In Progress</option>
                 <option>Done</option>
               </select>
-              <select className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+
+              {/* Priority */}
+              <select className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 col-span-1">
                 <option>All Priority</option>
                 <option>High</option>
                 <option>Medium</option>
                 <option>Low</option>
               </select>
+
+              {/* Search */}
+              <div className="relative col-span-2">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Search tasks..."
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
             </div>
           </div>
+
 
           {tasks.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24">
               <CheckSquare className="w-24 h-24 text-slate-700 mb-6" />
               <h3 className="text-2xl font-bold mb-2">No tasks yet</h3>
               <p className="text-slate-400 mb-6">Create your first task to get started</p>
-              <button 
+              <button
                 onClick={() => setShowTaskModal(true)}
                 className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
               >
@@ -218,14 +226,14 @@ export default function Tasks() {
             </div>
 
             <div className="flex gap-4 justify-end mt-6">
-              <button 
+              <button
                 onClick={() => setShowTaskModal(false)}
                 className="px-6 py-3 rounded-lg font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2"
               >
                 <X className="w-5 h-5" />
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleCreateTask}
                 className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
               >
@@ -236,6 +244,6 @@ export default function Tasks() {
           </div>
         </div>
       )}
-      </MainLayout>
-    );
+    </MainLayout>
+  );
 }

@@ -1,6 +1,6 @@
 import MainLayout from "../components/MainLayout";
 import React, { useState } from 'react';
-import { Plus, X, Save, CheckCircle, XCircle, Award, BarChart3, Trash2, Play, ChevronLeft } from 'lucide-react';
+import { Plus, X, Save, CheckCircle, XCircle, Award, BarChart3, Trash2, Play, ChevronLeft, Brain } from 'lucide-react';
 
 export default function Quizt() {
   const [view, setView] = useState('library');
@@ -162,7 +162,7 @@ export default function Quizt() {
 
   return (
     <MainLayout>
-    <div className="min-h-screen bg-slate-900 text-white p-8">
+    <div className="min-h-screen text-white p-8">
       <div className="max-w-7xl mx-auto">
         {view === 'library' && (
           <>
@@ -182,7 +182,7 @@ export default function Quizt() {
 
             {quizzes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24">
-                <BarChart3 className="w-24 h-24 text-slate-700 mb-6" />
+                <Brain className="w-24 h-24 text-slate-700 mb-6" />
                 <h3 className="text-2xl font-bold mb-2">No quizzes yet</h3>
                 <p className="text-slate-400 mb-6">Create your first quiz to start testing</p>
                 <button 

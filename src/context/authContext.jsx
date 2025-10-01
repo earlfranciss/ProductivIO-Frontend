@@ -43,8 +43,6 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const data = await AuthService.register(userData);
-      // localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
       return { success: true, user: data.user };
     } catch (err) {

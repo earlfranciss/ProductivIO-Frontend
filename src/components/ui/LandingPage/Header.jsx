@@ -26,7 +26,7 @@ export default function Header({ id }) {
                                 src={hover ? "/icon-glow.png" : "/icon.png"}
                                 alt="ProductivIO Logo"
                                 className="h-8 w-auto cursor-pointer"
-                                whileHover={{ scale: 1.2, rotate: 10 }}
+                                whileHover={{ scale: 1.25, rotate: 25 }}
                                 onMouseEnter={() => setHover(true)}
                                 onMouseLeave={() => setHover(false)}
                             />

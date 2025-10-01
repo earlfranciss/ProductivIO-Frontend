@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -21,6 +22,7 @@ export default function Sidebar() {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [hover, setHover] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -48,13 +50,20 @@ export default function Sidebar() {
       {/* Header */}
       <div className="p-6 flex items-center justify-between border-b border-zinc-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-white"></div>
+          <motion.img
+            src={hover ? "/icon-glow.png" : "/icon.png"}
+            alt="ProductivIO Logo"
+            className="h-8 w-auto cursor-pointer"
+            whileHover={{ scale: 1.25, rotate: 20 }}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          />
           <span className="text-white font-semibold">ProductivIO</span>
         </div>
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-1 px-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-200">
+      <nav className="flex-1 pt-3 px-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-200">
         <div className="space-y-1">
           {mainNavItems.map((item) => (
             <NavLink

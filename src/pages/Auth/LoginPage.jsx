@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AuthLayout from "../../components/AuthLayout";
 import { useAuth } from "../../context/authContext";
+import { validateLogin } from "../../validation/LoginValidation"
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -12,18 +13,11 @@ const LoginPage = () => {
     e.preventDefault();
     setErrors({ email: "", password: "" });
 
-    let hasError = false;
-
-    if (!email) {
-      setErrors((prev) => ({ ...prev, email: "Email is required" }));
-      hasError = true;
+    const validationErrors = validateLogin({ email, password });
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
-    if (!password) {
-      setErrors((prev) => ({ ...prev, password: "Password is required" }));
-      hasError = true;
-    }
-
-    if (hasError) return;
 
     try {
       const result = await login({ email, password });
@@ -32,19 +26,19 @@ const LoginPage = () => {
         console.log("Logged in:", result.user);
         window.location.href = "/dashboard";
       } else {
-const messages = result.errors?.general?.join("\n") || "Login failed";
+        const messages = result.errors?.general?.join("\n") || "Login failed";
 
-setErrors({ email: messages, password: messages });
+        setErrors({ email: messages, password: messages });
 
       }
     } catch (err) {
       console.error("Login failed:", err);
-      setErrors({ email: "Invalid email or password", password: "Invalid email or password" });
+      setErrors({ email: "Invalid email", password: "Invalid password" });
     }
   };
 
-  // Combine all current errors into a single line
-const combinedError = errors.email || errors.password;
+  // Error List
+  const combinedError = errors.email || errors.password;
 
 
   return (
@@ -96,6 +90,7 @@ const combinedError = errors.email || errors.password;
         >
           Sign In
         </button>
+
         {/* Error */}
         {combinedError && (
           <p className="text-red-500 text-sm mb-4 text-center whitespace-pre-line">{combinedError}</p>

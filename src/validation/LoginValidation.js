@@ -1,4 +1,3 @@
-// validation/loginValidation.js
 export const validateLogin = ({ email, password }) => {
   const errors = {};
 

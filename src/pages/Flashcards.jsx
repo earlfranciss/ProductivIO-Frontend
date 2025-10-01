@@ -1,6 +1,6 @@
 import MainLayout from "../components/MainLayout";
 import React, { useState } from 'react';
-import { Plus, X, Save, RotateCw, ChevronLeft, ChevronRight, Edit2, Trash2, BookOpen, Target } from 'lucide-react';
+import { Plus, X, Save, RotateCw, ChevronLeft, ChevronRight, Edit2, Trash2, BookOpen, Target, SquareChartGantt } from 'lucide-react';
 
 export default function Flashcards() {
   const [view, setView] = useState('library');
@@ -79,7 +79,7 @@ export default function Flashcards() {
 
   return (
     <MainLayout>
-    <div className="min-h-screen bg-slate-900 text-white p-8">
+    <div className="min-h-screen text-white p-8">
       <div className="max-w-7xl mx-auto">
         {view === 'library' && (
           <>
@@ -99,7 +99,7 @@ export default function Flashcards() {
 
             {flashcardSets.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24">
-                <BookOpen className="w-24 h-24 text-slate-700 mb-6" />
+                <SquareChartGantt className="w-24 h-24 text-slate-700 mb-6" />
                 <h3 className="text-2xl font-bold mb-2">No flashcard sets yet</h3>
                 <p className="text-slate-400 mb-6">Create your first flashcard set to start studying</p>
                 <button 
