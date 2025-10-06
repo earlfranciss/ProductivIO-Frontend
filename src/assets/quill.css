@@ -1,0 +1,122 @@
+/* Remove borders */
+.ql-toolbar, 
+.ql-container {
+  border: none !important;
+}
+
+/* Dark mode background */
+.ql-toolbar {
+  background-color: #18181b; 
+  border-bottom: 2px solid #3f3f46 !important;
+  border-radius: 0.5rem 0.5rem 0 0; 
+}
+
+.ql-container {
+  background-color: #18181b; 
+  color: white;
+  font-size: 1rem;
+  border: 1px solid #3f3f46 !important; 
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Make editor text area larger & resizable */
+.ql-editor {
+  min-height: 300px; 
+  max-height: 70vh; 
+  resize: vertical; 
+  overflow-y: auto;
+}
+
+/* Toolbar icons white */
+.ql-toolbar .ql-stroke {
+  stroke: #fff !important;
+}
+.ql-toolbar .ql-fill {
+  fill: #fff !important;
+}
+.ql-toolbar .ql-picker {
+  color: #fff !important;
+}
+
+/* Picker containers (Font, Size, Header dropdowns) */
+.ql-toolbar .ql-picker {
+  color: #fff !important; /* text color */
+}
+
+/* Dropdown trigger (the box itself) */
+.ql-toolbar .ql-picker-label {
+  background-color: #18181b !important; /* zinc-900 */
+  color: #fff !important;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #3f3f46 !important; 
+  border-radius: 0.25rem;
+}
+
+/* When dropdown is active */
+.ql-toolbar .ql-picker-label:hover,
+.ql-toolbar .ql-picker-label.ql-active {
+  background-color: #27272a !important; /* zinc-800 */
+  color: #d4d4d8 !important; /* zinc-300 */
+  border-color: #71717a !important; /* zinc-500 */
+}
+
+/* The dropdown menu itself */
+.ql-toolbar .ql-picker-options {
+  background-color: #18181b !important; /* zinc-900 */
+  padding: 0.25rem 0;
+  border: 1px solid #3f3f46 !important;
+  border-radius: 0.25rem;
+}
+
+/* Dropdown options */
+.ql-toolbar .ql-picker-options .ql-picker-item {
+  color: #fff !important;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Hover effect for dropdown items */
+.ql-toolbar .ql-picker-options .ql-picker-item:hover {
+  background-color: #2d2b2b !important; /* zinc-700 */
+  color: #fff !important;
+}
+
+/* Ensure dropdown items override default blue */
+.ql-toolbar .ql-picker-options .ql-picker-item:hover,
+.ql-toolbar .ql-picker-options .ql-picker-item.ql-selected {
+  background-color: #3f3f46 !important; /* zinc-700 */
+  color: #fff !important;
+}
+
+/* ========================= */
+/* TOOLBAR BUTTONS */
+/* ========================= */
+.ql-toolbar button {
+  border: 1px solid transparent !important;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove default browser blue outline */
+.ql-toolbar button:focus,
+.ql-toolbar button:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+/* Hover effect */
+.ql-toolbar button:hover {
+  background-color: #27272a !important;
+  border-color: #52525b !important;
+}
+
+/* Active state (e.g. Bold clicked) */
+.ql-toolbar button.ql-active {
+  background-color: #3f3f46 !important; /* zinc-700 */
+  border: 1px solid #a1a1aa !important; /* zinc-400 */
+  outline: none !important;
+  box-shadow: none !important;
+}

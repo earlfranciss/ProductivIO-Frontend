@@ -5,7 +5,7 @@ const MainLayout = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="relative h-screen bg-gray-900 text-white flex overflow-hidden">
+    <div className="relative h-screen bg-zinc-900 text-white flex overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex w-64 flex-shrink-0 bg-gray-800 h-full">
         <Sidebar />
@@ -47,11 +47,7 @@ const MainLayout = ({ children }) => {
             ☰
           </button>
         </div>
-
-        {/* Decorative blobs */}
-        <div className="absolute -top-16 -right-16 w-40 h-40 bg-purple-500/20 rounded-full blur-2xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl pointer-events-none"></div>
-
+        
         {/* Main content (fills the remaining space) */}
         <div className="relative z-10 w-full flex-1 overflow-y-auto">
           <div className="p-6 pt-2 md:p-8 md:pt-4">

@@ -6,7 +6,7 @@ export default function LogoutModal({ onLogout, onCancel }) {
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50"
-        onClick={onCancel} // click backdrop to close
+        onClick={onCancel}
       ></div>
 
       {/* Modal */}

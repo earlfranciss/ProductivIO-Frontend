@@ -2,7 +2,7 @@ export default function Highlights({ id }) {
     return (
         <div id={ id } className="bg-gray-900 py-24 sm:py-32">
             <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
-                <h2 className="text-center text-base/7 font-semibold text-indigo-400">Boost your productivity</h2>
+                <h2 className="text-center text-base/7 font-semibold text-purple-400">Boost your productivity</h2>
                 <p className="mx-auto mt-2 max-w-lg text-center text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
                     All the tools you need to manage your tasks and projects
                 </p>

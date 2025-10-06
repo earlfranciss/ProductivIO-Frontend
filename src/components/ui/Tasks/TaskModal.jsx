@@ -1,84 +1,114 @@
-
+import { X, Save } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import DateTimePicker from "react-datetime-picker";
 
-const TaskModal = ({ isOpen, onClose, onSave, initialData }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Medium");
-  const [dueDate, setDueDate] = useState("");
-
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || "");
-      setDescription(initialData.description || "");
-      setPriority(initialData.priority || "Medium");
-      setDueDate(initialData.dueDate || "");
-    }
-  }, [initialData]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave({ title, description, priority, dueDate });
+export default function TaskModal({ isOpen, onClose, onSave, taskData, setTaskData, isEditing }) {
+  const handleSubmit = () => {
+    onSave(taskData);
     onClose();
   };
-
+  
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
-          {initialData ? "Edit Task" : "Add Task"}
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Task Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full border rounded-lg p-2"
-            required
-          />
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          />
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          >
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-          </select>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          />
-          <div className="flex justify-end gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded-lg"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-            >
-              Save
-            </button>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-zinc-800 rounded-xl p-6 max-w-lg w-full border border-zinc-700">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            {isEditing ? "Edit Task" : "Create New Task"}
+          </h2>
+          <button onClick={onClose} className="text-zinc-400 hover:text-white">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <div className="space-y-4">
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">Task Title</label>
+            <input
+              type="text"
+              value={taskData.title}
+              onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
+              placeholder="Enter task title..."
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-zinc-500"
+            />
           </div>
-        </form>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">Description (Optional)</label>
+            <textarea
+              value={taskData.description}
+              onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
+              placeholder="Add task description..."
+              rows="3"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-zinc-500"
+            />
+          </div>
+
+          {/* Priority + Status */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">Priority</label>
+              <select
+                value={taskData.priority}
+                onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-zinc-500"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">Status</label>
+              <select
+                value={taskData.status}
+                onChange={(e) => setTaskData({ ...taskData, status: e.target.value })}
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-zinc-500"
+              >
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">Due date</label>
+            <DateTimePicker
+              onChange={(date) => setTaskData({ ...taskData, dueDate: date })}
+              value={taskData.dueDate}
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg text-white px-4 py-3"
+              calendarIcon={null}
+              clearIcon={null}
+              disableClock={true}
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-4 justify-end mt-6">
+          <button
+            onClick={onClose}
+            className="px-6 py-3 rounded-lg font-medium text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
+          >
+            <X className="w-5 h-5" />
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+          >
+            <Save className="w-5 h-5" />
+            {isEditing ? "Update Task" : "Save Task"}
+          </button>
+        </div>
       </div>
     </div>
   );
 };
-
-export default TaskModal;

@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { api } from "../utils/api";
 
 export const AuthService = {
     login: ({ email, password }) =>
@@ -8,11 +8,7 @@ export const AuthService = {
         api.register(userData),
 
     validateToken: async (token) => {
-        try {
-            return await api.validate(token);
-        } catch (err) {
-            return { valid: false, error: err.message };
-        }
+        return await api.validate(token);
     },
 
     logout: () => {

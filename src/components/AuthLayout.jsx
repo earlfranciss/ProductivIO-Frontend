@@ -16,7 +16,7 @@ const AuthLayout = ({ children }) => {
       <div className="hidden md:flex w-1/2 bg-gray-800 items-center justify-center relative overflow-hidden">
         {/* Background blobs */}
         <div className="absolute top-10 left-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl"></div>
 
         {/* Center content */}
         <div className="relative text-center z-10">

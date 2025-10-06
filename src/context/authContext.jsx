@@ -6,20 +6,25 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
     if (storedUser && storedToken) {
       AuthService.validateToken(storedToken)
-        .then(() => {
-          setUser(JSON.parse(storedUser));
+        .then((res) => {
+          if (res.valid) setUser(JSON.parse(storedUser));
+          else throw new Error("Invalid token");
         })
         .catch(() => {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setUser(null);
-        });
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -56,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

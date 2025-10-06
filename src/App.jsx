@@ -45,24 +45,24 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/two-factor" element={<TwoFactorAuth />} />
         </Route>
-        {/* <Route element={<PrivateRoute />}> */}
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-        <Route
-          path="/dashboard"
-          element={
-            <Dashboard
-              notes={dummyNotes}
-              tasks={dummyTasks}
-              setCurrentView={dummySetCurrentView}
-            />
-          }
-        />
-        <Route path="/notes" element={<Notes />} />
-        <Route path="/tasks" element={<Tasks />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route path="/flashcards" element={<Flashcards />} />
-        <Route path="/pomodoro" element={<Pomodoro />} />
-        {/* </Route> */}
+        <Route element={<PrivateRoute />}>
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard
+                notes={dummyNotes}
+                tasks={dummyTasks}
+                setCurrentView={dummySetCurrentView}
+              />
+            }
+          />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/flashcards" element={<Flashcards />} />
+          <Route path="/pomodoro" element={<Pomodoro />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

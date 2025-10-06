@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import 'react-calendar/dist/Calendar.css';
+@import 'react-clock/dist/Clock.css';
+@import 'react-datetime-picker/dist/DateTimePicker.css';
+
 
 body {
   margin: 0;
@@ -12,4 +16,96 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Dark mode for DateTimePicker */
+.react-datetime-picker {
+  @apply flex justify-between items-center w-full bg-zinc-900 border border-zinc-700 rounded-lg text-white;
+}
+
+.react-datetime-picker__wrapper {
+  @apply flex justify-between items-center w-full px-2;
+  border: none !important;
+}
+
+/* Calendar popup dark mode */
+.react-calendar {
+  @apply bg-zinc-900 border border-zinc-700 rounded-lg p-2;
+  color: white !important;
+}
+
+.react-calendar__tile {
+  @apply text-white hover:bg-zinc-700 rounded-lg;
+}
+
+.react-calendar__tile--now {
+  @apply bg-zinc-500/30 text-zinc-300 rounded-lg;
+}
+
+.react-calendar__tile--active {
+  @apply bg-zinc-600 text-white;
+}
+
+/* Time picker dark mode */
+.react-datetime-picker__inputGroup {
+  @apply bg-zinc-900 text-white px-2 rounded-lg;
+}
+
+/* Keep wrapper flexed */
+.react-datetime-picker__wrapper {
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 0.5rem;
+}
+
+/* Date group stays on left */
+.react-datetime-picker__inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Target AM/PM <select> directly */
+.react-datetime-picker__inputGroup__amPm,
+.react-datetime-picker__inputGroup__amPm select {
+  background-color: #18181b !important;
+  color: #fff !important;
+
+  padding: 0.25rem 0.5rem !important;
+}
+
+/* Dropdown options */
+.react-datetime-picker__inputGroup__amPm option {
+  background-color: #18181b !important;
+  color: #fff !important;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #3f3f46 !important;
 }

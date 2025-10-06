@@ -1,241 +1,300 @@
 import { useState, useEffect } from "react";
+import { UsePomodoro } from '../hooks/UsePomodoro';
+import { useAuth } from "../context/authContext";
 import MainLayout from "../components/MainLayout";
-import {
-  FileText,
-  CheckSquare,
-  Target,
-  Clock,
-  Plus,
-  Search,
-  X,
-  Edit2,
-  Trash2,
-  Save,
-  Coffee,
-  Timer,
-  TrendingUp,
-  Settings as SettingsIcon,
-  AlertCircle
-} from 'lucide-react';
+import PomodoroSettings from "../components/ui/Pomodoro/PomodoroSettings";
+import PomodoroTutorial from "../components/ui/Pomodoro/PomodoroTutorial";
+import { Clock, Play, Pause, RotateCcw, ChevronDown, Check, Settings } from 'lucide-react';
+import { ToastContainer } from "../components/ToastContainer";
 
 export default function Pomodoro() {
+  const { user, loading: authLoading } = useAuth();
+  const { pomodoros, createPomodoro, completedCount, totalDuration, loading: pomodoroLoading, reloadStats } = UsePomodoro(user.id);
 
-  const [timerMode, setTimerMode] = useState('work');
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [showTimerSettings, setShowTimerSettings] = useState(false);
+  // Durations
+  const [sessionType, setSessionType] = useState('work');
+  const [workDuration, setWorkDuration] = useState(25 * 60);
+  const [breakDuration, setBreakDuration] = useState(5 * 60);
 
+  // Timer state
+  const [endTime, setEndTime] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(workDuration);
 
-  const [timerSettings, setTimerSettings] = useState({
-    work: 25,
-    shortBreak: 5,
-    longBreak: 15,
-    sessionsUntilLongBreak: 4
-  });
+  // UI state
+  const [showSessionDropdown, setShowSessionDropdown] = useState(false);
+  const [showDurationDropdown, setShowDurationDropdown] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [toasts, setToasts] = useState([]);
+
+  const durationOptions = [5, 10, 15, 25, 30, 45, 60];
+
+  // Load saved timer state from localStorage
   useEffect(() => {
-    let interval;
-    if (isTimerRunning && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsTimerRunning(false);
+    const saved = localStorage.getItem('pomodoroState');
+    if (saved) {
+      const state = JSON.parse(saved);
+      setSessionType(state.sessionType);
+      setTimeLeft(state.timeLeft);
+      setIsRunning(state.isRunning);
+      setWorkDuration(state.workDuration);
+      setBreakDuration(state.breakDuration);
     }
+  }, []);
+
+  // Persist timer state to localStorage
+  useEffect(() => {
+    const state = { sessionType, timeLeft, isRunning, workDuration, breakDuration };
+    localStorage.setItem('pomodoroState', JSON.stringify(state));
+  }, [sessionType, timeLeft, isRunning, workDuration, breakDuration]);
+
+  // Timer interval
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const interval = setInterval(() => {
+      const remaining = Math.max(Math.round((endTime - Date.now()) / 1000), 0);
+      setTimeLeft(remaining);
+
+      if (remaining === 0) {
+        setIsRunning(false);
+        handleSessionEnd();
+        const nextType = sessionType === 'work' ? 'break' : 'work';
+        handleSessionTypeChange(nextType);
+        addToast('info', sessionType, sessionType + 'Session finished.');
+      }
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft]);
+  }, [isRunning, endTime, sessionType]);
+
+  // Update timeLeft when sessionType or durations change
+  useEffect(() => {
+    const durationSeconds = sessionType === 'work' ? workDuration : breakDuration;
+    setTimeLeft(durationSeconds);
+  }, [sessionType, workDuration, breakDuration]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  const startTimer = (mode) => {
-    setTimerMode(mode);
-    if (mode === 'work') setTimeLeft(timerSettings.work * 60);
-    else if (mode === 'shortBreak') setTimeLeft(timerSettings.shortBreak * 60);
-    else setTimeLeft(timerSettings.longBreak * 60);
-    setIsTimerRunning(true);
+  // Start/pause timer
+  const handleStartPause = () => {
+    if (!isRunning) {
+      const end = Date.now() + timeLeft * 1000;
+      setEndTime(end);
+      localStorage.setItem('pomodoroEndTime', end.toString());
+    }
+    setIsRunning(prev => !prev);
+  };
+
+  // On mount
+  useEffect(() => {
+    const savedEnd = localStorage.getItem('pomodoroEndTime');
+    if (savedEnd) {
+      const remaining = Math.max(Math.round((+savedEnd - Date.now()) / 1000), 0);
+      setTimeLeft(remaining);
+      setEndTime(+savedEnd);
+      if (remaining > 0) setIsRunning(true);
+    }
+  }, []);
+
+
+  const resetTimer = () => {
+    const durationSeconds = sessionType === 'work' ? workDuration : breakDuration;
+    setTimeLeft(durationSeconds);
+    setIsRunning(false);
+  };
+
+  const handleSessionTypeChange = (type) => {
+    setSessionType(type);
+    setShowSessionDropdown(false);
+    setIsRunning(false);
+  };
+
+  const handleDurationChange = (minutes) => {
+    const seconds = minutes * 60;
+    if (sessionType === 'work') setWorkDuration(seconds);
+    else setBreakDuration(seconds);
+    setShowDurationDropdown(false);
+    setTimeLeft(seconds);
+    setIsRunning(false);
+  };
+
+  const handleSaveSettings = () => {
+    resetTimer();
+    setShowSettings(false);
+  };
+
+  const handleSessionEnd = async () => {
+    const durationSeconds = sessionType === 'work' ? workDuration : breakDuration;
+    const hours = Math.floor(durationSeconds / 3600);
+    const minutes = Math.floor((durationSeconds % 3600) / 60);
+    const seconds = durationSeconds % 60;
+
+    const durationString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    const completedPomodoro = {
+      UserID: user.id,
+      Duration: durationString,
+      SessionType: sessionType,
+      IsCompleted: true,
+    };
+
+    await createPomodoro(completedPomodoro);
+    await reloadStats();
+  };
+
+  const totalFocusHours = Math.floor(totalDuration);
+  const totalFocusMinutes = Math.floor((totalDuration % 1) * 60);
+
+  if (authLoading || pomodoroLoading) {
+    return (
+      <MainLayout>
+        <div className="min-h-screen flex items-center justify-center text-white">
+          Loading Pomodoro data...
+        </div>
+      </MainLayout>
+    );
+  }
+
+  const addToast = (type, title, message, duration = 3000) => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, type, title, message }]);
+
+    setTimeout(() => {
+      setToasts(prev => prev.filter(toast => toast.id !== id));
+    }, duration);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
   };
 
   return (
     <MainLayout>
       <div className="min-h-screen text-white p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-7">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Focus Timer</h1>
-              <p className="text-slate-400">Stay focused with the Pomodoro Technique</p>
+              <h1 className="text-4xl font-bold mb-2">Pomodoro Timer</h1>
+              <p className="text-zinc-400">Stay focused with timed work sessions</p>
             </div>
-            <button
-              onClick={() => setShowTimerSettings(true)}
-              className="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
-            >
-              <SettingsIcon className="w-5 h-5" />
-              Settings
-            </button>
+            <Settings
+              className="mt-4 hover:rotate-90 hover:text-zinc-400 cursor-pointer"
+              onClick={() => setShowSettings(true)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-                  <CheckSquare className="w-6 h-6 text-emerald-500" />
-                </div>
-                <div>
-                  <div className="text-3xl font-bold">0</div>
-                  <div className="text-sm text-slate-400">Sessions Today</div>
-                  <div className="text-xs text-slate-500">Focus sessions completed</div>
-                </div>
+          {/* Timer Display */}
+          <div className="bg-zinc-900 rounded-2xl p-12 border border-zinc-800 mb-8">
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Clock className="w-6 h-6 text-emerald-500" />
+                <h2 className="text-2xl font-bold">{sessionType === 'work' ? 'Work Session' : 'Break'}</h2>
+              </div>
+              <p className="text-gray-500 text-sm mb-1">Total sessions completed: {completedCount}</p>
+              <p className="text-gray-500 text-sm">Total focus time: {totalFocusHours}h {totalFocusMinutes}m</p>
+            </div>
+
+            <div className="text-center mb-12">
+              <div className="text-8xl font-bold mb-8" style={{
+                background: 'linear-gradient(to right, #047857, #9ccaa4ff)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
+                {formatTime(timeLeft)}
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={handleStartPause}
+                  className="bg-gradient-to-l from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-700 px-8 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                >
+                  {isRunning ? <><Pause className="w-4 h-4" />Pause</> : <><Play className="w-4 h-4" />Start</>}
+                </button>
+                <button
+                  onClick={resetTimer}
+                  className="bg-black hover:bg-zinc-800 border border-zinc-700 px-8 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset
+                </button>
               </div>
             </div>
 
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                  <Target className="w-6 h-6 text-blue-500" />
-                </div>
-                <div>
-                  <div className="text-3xl font-bold">0h</div>
-                  <div className="text-sm text-slate-400">Focus Time</div>
-                  <div className="text-xs text-slate-500">Total time this week</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-purple-500" />
-                </div>
-                <div>
-                  <div className="text-3xl font-bold">0</div>
-                  <div className="text-sm text-slate-400">Current Streak</div>
-                  <div className="text-xs text-slate-500">Sessions in this cycle</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800 rounded-xl p-12 border border-slate-700">
-            <div className="flex justify-center gap-4 mb-8">
-              <button
-                onClick={() => startTimer('work')}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors ${timerMode === 'work' ? 'bg-emerald-600' : 'bg-slate-700 hover:bg-slate-600'
-                  }`}
-              >
-                <Timer className="w-5 h-5" />
-                Work
-              </button>
-              <button
-                onClick={() => startTimer('shortBreak')}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors ${timerMode === 'shortBreak' ? 'bg-emerald-600' : 'bg-slate-700 hover:bg-slate-600'
-                  }`}
-              >
-                <Coffee className="w-5 h-5" />
-                Short Break
-              </button>
-              <button
-                onClick={() => startTimer('longBreak')}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors ${timerMode === 'longBreak' ? 'bg-emerald-600' : 'bg-slate-700 hover:bg-slate-600'
-                  }`}
-              >
-                <Coffee className="w-5 h-5" />
-                Long Break
-              </button>
-            </div>
-
-            <div className="text-center mb-8">
-              <div className="text-8xl font-bold text-emerald-500 mb-8">{formatTime(timeLeft)}</div>
-              <div className="flex justify-center">
-                <div className="relative w-64 h-64">
-                  <svg className="w-full h-full -rotate-90">
-                    <circle cx="128" cy="128" r="120" fill="none" stroke="#1e293b" strokeWidth="8" />
-                    <circle cx="128" cy="128" r="120" fill="none" stroke="#10b981" strokeWidth="8" strokeDasharray="754" strokeDashoffset="0" strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="w-20 h-20 bg-emerald-600 hover:bg-emerald-700 rounded-full flex items-center justify-center transition-colors">
-                      <Timer className="w-8 h-8" />
-                    </button>
+            {/* Session Type & Duration */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Session Type */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-white mb-3">Session Type</label>
+                <button
+                  onClick={() => setShowSessionDropdown(!showSessionDropdown)}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white flex items-center justify-between"
+                >
+                  <span className="capitalize">{sessionType}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {showSessionDropdown && (
+                  <div className="absolute z-10 w-full mt-2 bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden">
+                    {['work', 'break'].map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => handleSessionTypeChange(type)}
+                        className="w-full px-4 py-3 text-left hover:bg-zinc-700 flex items-center justify-between"
+                      >
+                        <span className="capitalize">{type}</span>
+                        {sessionType === type && <Check className="w-4 h-4 text-emerald-500" />}
+                      </button>
+                    ))}
                   </div>
-                </div>
+                )}
+              </div>
+
+              {/* Duration */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-white mb-3">Duration (minutes)</label>
+                <button
+                  onClick={() => setShowDurationDropdown(!showDurationDropdown)}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white flex items-center justify-between"
+                >
+                  <span>{Math.floor((sessionType === 'work' ? workDuration : breakDuration) / 60)} min</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {showDurationDropdown && (
+                  <div className="absolute z-10 w-full mt-2 bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                    {durationOptions.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => handleDurationChange(option)}
+                        className="w-full px-4 py-3 text-left hover:bg-zinc-700 flex items-center justify-between"
+                      >
+                        <span>{option} min</span>
+                        {Math.floor((sessionType === 'work' ? workDuration : breakDuration) / 60) === option && <Check className="w-4 h-4 text-emerald-500" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
+
+          <PomodoroTutorial />
         </div>
+
+        <PomodoroSettings
+          workDuration={workDuration}
+          breakDuration={breakDuration}
+          setWorkDuration={setWorkDuration}
+          setBreakDuration={setBreakDuration}
+          showSettings={showSettings}
+          setShowSettings={setShowSettings}
+          onSave={handleSaveSettings}
+        />
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
       </div>
-      {showTimerSettings && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 rounded-xl p-6 max-w-lg w-full border border-slate-700">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <SettingsIcon className="w-6 h-6" />
-                <h2 className="text-2xl font-bold text-white">Timer Settings</h2>
-              </div>
-              <button onClick={() => setShowTimerSettings(false)} className="text-slate-400 hover:text-white">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Work Session (minutes)</label>
-                <input
-                  type="number"
-                  value={timerSettings.work}
-                  onChange={(e) => setTimerSettings({ ...timerSettings, work: parseInt(e.target.value) })}
-                  className="w-full bg-slate-900 border border-emerald-500 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Short Break (minutes)</label>
-                <input
-                  type="number"
-                  value={timerSettings.shortBreak}
-                  onChange={(e) => setTimerSettings({ ...timerSettings, shortBreak: parseInt(e.target.value) })}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Long Break (minutes)</label>
-                <input
-                  type="number"
-                  value={timerSettings.longBreak}
-                  onChange={(e) => setTimerSettings({ ...timerSettings, longBreak: parseInt(e.target.value) })}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Sessions until Long Break</label>
-                <input
-                  type="number"
-                  value={timerSettings.sessionsUntilLongBreak}
-                  onChange={(e) => setTimerSettings({ ...timerSettings, sessionsUntilLongBreak: parseInt(e.target.value) })}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-4 justify-end mt-6">
-              <button
-                onClick={() => setShowTimerSettings(false)}
-                className="px-6 py-3 rounded-lg font-medium text-slate-400 hover:text-white transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setShowTimerSettings(false)}
-                className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium transition-colors"
-              >
-                Save Settings
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </MainLayout>
-  )
+  );
 }

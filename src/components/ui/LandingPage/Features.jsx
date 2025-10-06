@@ -5,7 +5,7 @@ export default function Features({ id }) {
         <div id={ id } className="bg-gray-900 py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:text-center">
-                    <h2 className="text-base/7 font-semibold text-indigo-400">Work Smarter</h2>
+                    <h2 className="text-base/7 font-semibold text-purple-400">Work Smarter</h2>
                     <p className="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
                         Tools to boost your productivity
                     </p>
@@ -18,7 +18,7 @@ export default function Features({ id }) {
                     <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
                         <div className="relative pl-16">
                             <dt className="text-base/7 font-semibold text-white">
-                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-500">
+                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-purple-500">
                                     <svg
                                         viewBox="0 0 24 24"
                                         fill="none"
@@ -42,7 +42,7 @@ export default function Features({ id }) {
 
                         <div className="relative pl-16">
                             <dt className="text-base/7 font-semibold text-white">
-                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-500">
+                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-purple-500">
                                     <svg
                                         viewBox="0 0 24 24"
                                         fill="none"
@@ -66,7 +66,7 @@ export default function Features({ id }) {
 
                         <div className="relative pl-16">
                             <dt className="text-base/7 font-semibold text-white">
-                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-500">
+                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-purple-500">
                                     <svg
                                         viewBox="0 0 24 24"
                                         fill="none"
@@ -90,7 +90,7 @@ export default function Features({ id }) {
 
                         <div className="relative pl-16">
                             <dt className="text-base/7 font-semibold text-white">
-                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-500">
+                                <div className="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-purple-500">
                                     <svg
                                         viewBox="0 0 24 24"
                                         fill="none"

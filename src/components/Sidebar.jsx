@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import LogoutModal from "./LogoutModal";
 import {
   LayoutDashboard,
   FileEdit,
@@ -13,16 +15,17 @@ import {
   CircleCheckBig,
   SquareChartGantt,
   Brain,
-  Timer
+  Timer,
+  Layers
 } from 'lucide-react';
-import { useAuth } from "../context/authContext";
-import LogoutModal from "./LogoutModal";
 
 export default function Sidebar() {
+  const { user, loading: authLoading } = useAuth();
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [hover, setHover] = useState(false);
+  const profileRef = useRef(null);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -30,7 +33,7 @@ export default function Sidebar() {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: CircleCheckBig, label: 'Tasks', path: '/tasks' },
     { icon: FileEdit, label: 'Notes', path: '/notes' },
-    { icon: SquareChartGantt, label: 'Flashcards', path: '/flashcards' },
+    { icon: Layers, label: 'Flashcards', path: '/flashcards' },
     { icon: Brain, label: 'Quiz', path: '/quiz' },
     { icon: Timer, label: 'Pomodoro', path: '/pomodoro' }
   ];
@@ -45,8 +48,20 @@ export default function Sidebar() {
     navigate("/login");
   };
 
+  // User Profile closes if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="h-screen w-64 bg-zinc-900 text-gray-300 flex flex-col">
+    <div className="h-screen w-64 bg-zinc-900 text-gray-300 flex flex-col border-r border-zinc-800">
       {/* Header */}
       <div className="p-6 flex items-center justify-between border-b border-zinc-800">
         <div className="flex items-center gap-2">
@@ -103,17 +118,17 @@ export default function Sidebar() {
       </div>
 
       {/* User Profile */}
-      <div className="border-t border-zinc-800 p-3 relative">
+      <div ref={profileRef} className="border-t border-zinc-800 p-3 relative ">
         <button
           onClick={() => setIsProfileOpen(!isProfileOpen)}
           className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-zinc-800 transition-colors"
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white text-sm font-semibold">
-            EF
+          <div className="w-8 h-8 px-2 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white text-sm font-semibold">
+            {`${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase()}
           </div>
-          <div className="flex-1 text-left">
-            <div className="text-sm font-medium text-white">Earl Francis</div>
-            <div className="text-xs text-gray-500">eyong@n-pax.com</div>
+          <div className="flex-1 min-w-0  text-left">
+            <div className="truncate text-sm font-medium text-white">{user.firstName}</div>
+            <div className="truncate text-xs text-gray-500">{user.email}</div>
           </div>
           <MoreHorizontal className="w-4 h-4 text-gray-400" />
         </button>
@@ -121,14 +136,14 @@ export default function Sidebar() {
         {/* Profile Dropdown */}
         {isProfileOpen && (
           <div className="absolute bottom-full left-3 right-3 mb-2 bg-zinc-800 rounded-lg border border-zinc-700 shadow-xl overflow-hidden">
-            <div className="p-3 border-b border-zinc-700">
+            <div className="p-3 border-b border-zinc-700 ">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white font-semibold">
-                  EF
+                <div className="w-8 h-8 px-2 rounded-full bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-white text-sm font-semibold">
+                  {`${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase()}
                 </div>
-                <div>
-                  <div className="text-sm font-medium text-white">Earl Francis</div>
-                  <div className="text-xs text-gray-400">eyong@n-pax.com</div>
+                <div className="flex-1 min-w-0  text-left">
+                  <div className="truncate text-sm font-medium text-white">{user.firstName}</div>
+                  <div className="truncate text-xs text-gray-400">{user.email}</div>
                 </div>
               </div>
             </div>
