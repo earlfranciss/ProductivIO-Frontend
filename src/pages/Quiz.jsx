@@ -165,6 +165,21 @@ console.log("Quizzes", quizzes);
     setShowTaskModal(true);
   };
 
+    const openCreateQuizModal = () => {
+    setNewQuiz({
+          title: '',
+    description: '',
+    questions: [{
+      type: 'multiple',
+      question: '',
+      options: ['', '', '', ''],
+      correctAnswer: 0
+    }]
+        });
+    setIsEditing(false);
+    setShowQuizModal(true);
+  };
+
   return (
     <MainLayout>
       <div className="min-h-screen text-white p-8">
@@ -177,7 +192,7 @@ console.log("Quizzes", quizzes);
                   <p className="text-zinc-400">Test your knowledge with custom quizzes</p>
                 </div>
                 <button
-                  onClick={() => setShowQuizModal(true)}
+                  onClick={openCreateQuizModal}
                   className="bg-emerald-800 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
@@ -191,7 +206,7 @@ console.log("Quizzes", quizzes);
                   <h3 className="text-2xl font-bold mb-2">No quizzes yet</h3>
                   <p className="text-zinc-400 mb-6">Create your first quiz to start testing</p>
                   <button
-                    onClick={() => setShowQuizModal(true)}
+                    onClick={openCreateQuizModal}
                     className="bg-emerald-800 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
                   >
                     <Plus className="w-5 h-5" />

@@ -2,17 +2,6 @@ import { useState, useEffect } from "react";
 import { X, Save, Plus, Trash2 } from "lucide-react";
 
 export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizData, isEditing }) {
-    const [newQuiz, setNewQuiz] = useState({
-        title: '',
-        description: '',
-        questions: [{
-            type: 'multiple',
-            question: '',
-            options: ['', '', '', ''],
-            correctAnswer: 0
-        }]
-    });
-
     const handleSubmit = () => {
         onSave(quizData);
         onClose();
@@ -21,9 +10,9 @@ export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizDa
     if (!isOpen) return null;
 
     const addQuestion = () => {
-        setNewQuiz({
-            ...newQuiz,
-            questions: [...newQuiz.questions, {
+        setQuizData({
+            ...quizData,
+            questions: [...quizData.questions, {
                 type: 'multiple',
                 question: '',
                 options: ['', '', '', ''],
@@ -39,7 +28,7 @@ export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizDa
                     <h2 className="text-2xl font-bold text-white">
                         {isEditing ? "Edit Quiz" : "Create New Quiz"}
                     </h2>
-                    <button onClick={() => setShowCreateModal(false)} className="text-zinc-400 hover:text-white">
+                    <button onClick={onClose} className="text-zinc-400 hover:text-white">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -80,7 +69,7 @@ export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizDa
                         </div>
 
                         <div className="space-y-4">
-                            {newQuiz.questions.map((question, qIndex) => (
+                            {quizData.questions.map((question, qIndex) => (
                                 <div key={qIndex} className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
                                     <div className="flex items-center justify-between mb-3">
                                         <span className="text-sm font-medium text-zinc-400">Question {qIndex + 1}</span>
@@ -94,7 +83,7 @@ export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizDa
                                                 <option value="trueFalse">True/False</option>
                                                 <option value="identification">Identification</option>
                                             </select>
-                                            {newQuiz.questions.length > 1 && (
+                                            {quizData.questions.length > 1 && (
                                                 <button
                                                     onClick={() => removeQuestion(qIndex)}
                                                     className="text-zinc-400 hover:text-red-500"
@@ -234,7 +223,7 @@ export default function QuizModal({ isOpen, onClose, onSave, quizData, setQuizDa
 
                 <div className="flex gap-4 justify-end mt-6 pt-4 border-t border-zinc-700">
                     <button
-                        onClick={() => setShowCreateModal(false)}
+                        onClick={onClose}
                         className="px-6 py-3 rounded-lg font-medium text-zinc-400 hover:text-white transition-colors flex items-center gap-2"
                     >
                         <X className="w-5 h-5" />
