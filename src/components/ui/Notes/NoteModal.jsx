@@ -1,13 +1,41 @@
 import NoteEditor from "./NoteEditor";
+import React, { useState, useEffect } from "react";
 import { X, Save } from "lucide-react";
+import { ToastContainer } from "../../ToastContainer";
 
-export default function NoteModal({ isOpen, onClose, onSave, noteData, setNoteData, isEditing }) {
-  const handleSubmit = () => {
+export default function NoteModal({ notes, isOpen, onClose, onSave, noteData, setNoteData, isEditing }) {
+  const [toasts, setToasts] = useState([]);
+
+   const handleSubmit = () => {
+    const Duplicate = notes.some(
+      (note) => 
+        note.title.toLowerCase() === noteData.title.toLowerCase() 
+    );
+
+    if (Duplicate) {
+      addToast('error', 'Note already exist!', `${noteData.title} already exists as notes.`);
+      return;
+    }
+
     onSave(noteData);
     onClose();
   };
 
   if (!isOpen) return null;
+
+      const addToast = (type, title, message, duration = 3000) => {
+  const id = Date.now() + Math.random();
+  setToasts(prev => [...prev, { id, type, title, message }]);
+  
+  setTimeout(() => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, duration);
+};
+
+const removeToast = (id) => {
+  setToasts(prev => prev.filter(toast => toast.id !== id));
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -56,6 +84,8 @@ export default function NoteModal({ isOpen, onClose, onSave, noteData, setNoteDa
           </button>
         </div>
       </div>
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 }

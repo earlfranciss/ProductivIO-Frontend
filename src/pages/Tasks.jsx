@@ -183,6 +183,7 @@ const removeToast = (id) => {
           )}
 
           <TaskModal
+            tasks = {tasks}
             isOpen={showTaskModal}
             onClose={() => setShowTaskModal(false)}
             onSave={handleSaveTask}

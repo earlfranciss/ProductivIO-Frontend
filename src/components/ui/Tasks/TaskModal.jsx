@@ -1,14 +1,41 @@
 import { X, Save } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import DateTimePicker from "react-datetime-picker";
+import { ToastContainer } from "../../ToastContainer";
 
-export default function TaskModal({ isOpen, onClose, onSave, taskData, setTaskData, isEditing }) {
+export default function TaskModal({ tasks, isOpen, onClose, onSave, taskData, setTaskData, isEditing }) {
+  const [toasts, setToasts] = useState([]);
+
   const handleSubmit = () => {
+    const Duplicate = tasks.some(
+      (task) => 
+        task.title.toLowerCase() === taskData.title.toLowerCase() 
+    );
+
+    if (Duplicate) {
+      addToast('error', 'Title already exist!', `${taskData.title} already exists as task.`);
+      return;
+    }
+
     onSave(taskData);
     onClose();
   };
   
   if (!isOpen) return null;
+
+    const addToast = (type, title, message, duration = 3000) => {
+  const id = Date.now() + Math.random();
+  setToasts(prev => [...prev, { id, type, title, message }]);
+  
+  setTimeout(() => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, duration);
+};
+
+const removeToast = (id) => {
+  setToasts(prev => prev.filter(toast => toast.id !== id));
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -109,6 +136,8 @@ export default function TaskModal({ isOpen, onClose, onSave, taskData, setTaskDa
           </button>
         </div>
       </div>
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

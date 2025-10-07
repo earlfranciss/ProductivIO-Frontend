@@ -19,9 +19,8 @@ export default function Header({ id }) {
             <header className="absolute inset-x-0 top-0 z-50">
                 <nav className="flex items-center justify-between p-6 lg:px-8">
                     {/* Logo */}
-                    <div className="flex lg:flex-1">
-                        <Link to="/">
-                            <span className="sr-only">ProductivIO</span>
+                    <div className="flex items-center lg:flex-1">
+                        <Link to="/" className="flex items-center space-x-2">
                             <motion.img
                                 src={hover ? "/icon-glow.png" : "/icon.png"}
                                 alt="ProductivIO Logo"
@@ -30,8 +29,10 @@ export default function Header({ id }) {
                                 onMouseEnter={() => setHover(true)}
                                 onMouseLeave={() => setHover(false)}
                             />
+                            <p className="text-m font-bold">ProductivIO</p>
                         </Link>
                     </div>
+
 
                     {/* Mobile menu button */}
                     <div className="flex lg:hidden">

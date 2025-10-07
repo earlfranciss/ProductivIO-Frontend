@@ -147,6 +147,7 @@ export default function Notes() {
       </div>
 
       <NoteModal
+        notes = { notes }
         isOpen={showNoteModal}
         onClose={() => setShowNoteModal(false)}
         onSave={handleSaveNote}
