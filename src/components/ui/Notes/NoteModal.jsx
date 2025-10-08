@@ -12,7 +12,7 @@ export default function NoteModal({ notes, isOpen, onClose, onSave, noteData, se
         note.title.toLowerCase() === noteData.title.toLowerCase() 
     );
 
-    if (Duplicate) {
+    if (Duplicate && isEditing == false) {
       addToast('error', 'Note already exist!', `${noteData.title} already exists as notes.`);
       return;
     }

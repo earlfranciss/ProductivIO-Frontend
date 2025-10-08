@@ -12,7 +12,7 @@ export default function TaskModal({ tasks, isOpen, onClose, onSave, taskData, se
         task.title.toLowerCase() === taskData.title.toLowerCase() 
     );
 
-    if (Duplicate) {
+    if (Duplicate && isEditing == false) {
       addToast('error', 'Title already exist!', `${taskData.title} already exists as task.`);
       return;
     }
